@@ -1,0 +1,71 @@
+
+
+% Theorem environments
+\usepackage{amsthm}  % For theorem-like environments
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{assumption}[theorem]{Assumption}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+    
+\NewDocumentCommand{\br}{m}{\left( #1 \right)}
+\NewDocumentCommand{\bs}{m}{\left[ #1 \right]}
+\NewDocumentCommand{\bc}{m}{\left\{ #1 \right\}}
+
+% Sets and number systems using dsfont (mathds)
+\NewDocumentCommand{\R}{}{\mathds{R}}  % Real numbers
+\RenewDocumentCommand{\H}{}{\mathds{H}}  % Hilbert space
+\NewDocumentCommand{\N}{}{\mathds{N}}  % Natural numbers
+\NewDocumentCommand{\Z}{}{\mathds{Z}}  % Integers
+\NewDocumentCommand{\Q}{}{\mathds{Q}}  % Rational numbers
+\NewDocumentCommand{\C}{}{\mathds{C}}  % Complex numbers
+\NewDocumentCommand{\ind}{}{\mathds{1}}  % Complex numbers
+
+% Mathematical operators and functions
+\NewDocumentCommand{\defeq}{}{\coloneq} % Definition equal (
+\NewDocumentCommand{\der}{}{\mathrm{d}}  % Differential oper
+\NewDocumentCommand{\cder}{}{\partial}  % Differential oper
+\NewDocumentCommand{\mul}{mm}{\langle #1, #2 \rangle}  % Inn
+\NewDocumentCommand{\norm}{m}{\left\lVert #1 \right\rVert}  
+\NewDocumentCommand{\abs}{m}{\left\lvert #1 \right\rvert}  %
+
+
+\NewDocumentCommand{\maximize}{}{\text{maximize }}
+\NewDocumentCommand{\minimize}{}{\text{minimize }}
+\NewDocumentCommand{\subjectto}{}{\text{subject to }}
+\NewDocumentCommand{\overall}{}{\text{over all }}
+
+
+% Additional common mathematical abbreviations
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\epi}{epi}
+\DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\tr}{tr} % Already using \operatorname,
+\DeclareMathOperator{\rank}{rank} % Already using \operatorn
+
+% More definitions as needed
+\NewDocumentCommand{\grad}{}{\nabla}
+
+\let\olddisplayopen\[
+\let\olddisplayclose\]
+
+% Redefine \[ and \]
+\RenewDocumentCommand{\[}{}{%
+  \begin{equation}\begin{aligned}%
+}
+\RenewDocumentCommand{\]}{}{%
+  \end{aligned}\end{equation}%
+}
+
