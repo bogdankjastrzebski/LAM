@@ -1,0 +1,141 @@
+\documentclass{article}
+
+
+\usepackage{PRIMEarxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath, amssymb}
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{graphicx}
+\graphicspath{{media/}}     % organize your images and other figures under media/ folder
+\usepackage{libertine}
+\usepackage{libertinust1math}
+\usepackage{dsfont}  % Double stroke fonts (provides \mathds)
+\usepackage{nicefrac}
+\usepackage{todonotes}
+
+\input{definitions}
+
+%% Title
+\title{Technical Proposal: Parametric Audio-Visual SELD via Latent Gaussian Tracking and Implicit Feature Pooling
+%%%% Cite as
+%%%% Update your official citation here when published 
+\thanks{\textit{\underline{Citation}}: 
+\textbf{Authors. Title. Pages.... DOI:000000/11111.}} 
+}
+
+\author{
+  Bogdan Jastrzębski \\
+  Samsung Research Institute Poland (SRPOL) \\
+  Warsaw \\
+  \texttt{b.jastrzebsk@samsung.com} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+Current baseline architectures for Sound Event Localization and Detection (SELD) rely on exact numerical solvers that map 4-channel spatial audio to dense $180^\circ \times 360^\circ$ acoustic energy grids. This mathematically ill-posed super-resolution approach introduces severe spatial aliasing and checkerboard artifacts, forcing models into a ``blank slate'' evaluation per frame to avoid solver divergence. We propose a pragmatic, rapid-prototyping architecture that abandons dense pixel rendering. By maintaining a fixed set of continuous parametric 2D Gaussians to represent acoustic objects, we utilize a pre-trained visual object detector (YOLO) to extract dense semantic grids. Features are isolated via analytical integration over these Gaussians. This differentiable, object-centric pooling enables ultra-fast variational tracking and active inference, stabilizing classification across time while remaining computationally viable for real-time applications.
+\end{abstract}
+
+
+% keywords can be removed
+\keywords{Sound Event Localization and Detection \and Parametric Gaussian Tracking \and Implicit Feature Pooling \and Audio-Visual Fusion \and Active Inference}
+
+
+\section{Introduction}
+The primary bottleneck in current audio-visual SELD pipelines is the reliance on dense spatial mapping. Because the system attempts to map a sparse 4-microphone array onto 484 spatial directions, the underlying Hessian matrix is singular. Numerical solvers (e.g., ADMM) generate honeycomb artifacts when minimizing this objective. Treating these artifacts as ground truth forces convolutional detection heads to hallucinate false positives. 
+
+Furthermore, generating dense spatial maps restricts the network to processing each 100ms frame independently. We propose a paradigm shift: extracting deep features via pre-trained networks and using a fixed pool of parametric Gaussians to actively attend to, pool, and classify sound events in a continuous space. 
+
+\section{Proposed Architecture}
+
+\subsection{A. Visual and Audio Feature Extraction}
+To ensure the feasibility of a robust proof-of-concept within a short development cycle, we avoid training feature extractors from scratch.
+\begin{itemize}
+    \item \textbf{Vision Stream:} A pre-trained visual backbone (e.g., YOLO) processes the $360^\circ$ input frame. Instead of utilizing the final bounding-box regression head, we extract the deep, semantically rich feature grid $\mathbf{F}_V \in \mathbb{R}^{C \times H \times W}$.
+    \item \textbf{Audio Stream:} Raw 4-channel microphone data is processed into a localized temporal representation $\mathbf{F}_A(x)$ (specific acoustic network module, such as a lightweight CNN or AudioMAE, to be determined during empirical testing).
+\end{itemize}
+
+\subsection{B. Parametric Gaussian Mixture (The Spatial Filter)}
+We define the acoustic scene not as a grid, but as a fixed memory bank of $K$ continuous 2D Gaussians (e.g., $K=32$), representing potential sound sources. For the $k$-th source, the spatial distribution is defined continuously over the angular domain $\Omega$:
+\begin{equation}
+    g(x \mid \theta_k) = \mathcal{N}(x \mid \mu_k, \Sigma_k)
+\end{equation}
+where $\mu_k$ represents the spatial centroid (azimuth and elevation) and $\Sigma_k$ encapsulates the spatial spread.
+
+\subsection{C. Implicit Differentiable Feature Pooling}
+Rather than computationally generating and decoding a dense 19-channel spatial tensor, we utilize the $K$ Gaussians as dynamic spatial attention masks. We extract local, object-specific features by analytically integrating the pre-trained feature grids weighted by the Gaussian probability density function:
+\begin{equation}
+    \mathbf{v}_{V,k} = \int_{\Omega} \mathbf{F}_V(x) \mathcal{N}(x \mid \mu_k, \Sigma_k) \, dx
+\end{equation}
+\begin{equation}
+    \mathbf{v}_{A,k} = \int_{\Omega} \mathbf{F}_A(x) \mathcal{N}(x \mid \mu_k, \Sigma_k) \, dx
+\end{equation}
+This implicit masking analytically collapses heavy $180^\circ \times 360^\circ$ spatial tensors into lightweight, isolated feature vectors $\mathbf{v}_{V,k}$ and $\mathbf{v}_{A,k}$ for each tracked object.
+
+\subsection{D. State Memory and Active Classification}
+The pooled modality vectors are concatenated to form a joint object representation: $\mathbf{z}_k = [\mathbf{v}_{V,k}, \mathbf{v}_{A,k}]$. A lightweight fully-connected classification head maps $\mathbf{z}_k$ to a probability distribution $\mathbf{c}_k$. 
+
+Crucially, the classifier maps to 14 classes: the 13 standard DCASE target events, plus an explicit \textbf{``Inactive/Background''} class. The parameters for all $K$ Gaussians are maintained in memory across time. If a sound event stutters or pauses, the Gaussian's physical coordinates remain locked onto the visual anchor (e.g., a person's mouth), while the class probability smoothly transitions to ``Inactive.'' We propagate the variational approximate posterior $q^{(t)}(\theta_k)$ from frame $t$ to act as the temporal prior for frame $t+1$.
+
+\section{Optimization and Active Inference}
+
+The network utilizes Active Inference during training. Because the spatial integration step is fully differentiable, backpropagating the loss allows the Gaussian coordinates to structurally ``slide'' across the YOLO feature grid to maximize visual classification certainty and acoustic coverage.
+
+\subsection{Set Prediction and Bipartite Matching}
+Because the model predicts a fixed set of $K$ objects regardless of how many sounds are actually active, we treat optimization as a set prediction problem. We use the Hungarian Algorithm (bipartite matching) to find the optimal assignment between the $M$ ground-truth sound events and a subset of the $K$ predicted Gaussians based on spatial proximity and class match. Unmatched Gaussians are assigned to the ``Inactive'' ground-truth class.
+
+\subsection{The Loss Function}
+The objective is to continuously adjust the Gaussian parameters $\theta_k$ to maximize signal alignment. For frame $t$, the multi-task loss is formulated as:
+\begin{equation}
+    \mathcal{L}^{(t)} = \lambda_{cls} \mathcal{L}_{cls} + \lambda_{loc} \mathcal{L}_{loc} + \lambda_{KL} \mathcal{L}_{KL}
+\end{equation}
+\begin{itemize}
+    \item \textbf{Classification Loss ($\mathcal{L}_{cls}$):} Standard cross-entropy between the predicted class probabilities and the Hungarian-matched ground truth, effectively forcing unassigned spatial queries to mute themselves.
+    \begin{equation}
+        \mathcal{L}_{cls} = - \sum_{k=1}^K \log p(\mathbf{c}_k = \mathbf{y}_k \mid \mathbf{z}_k)
+    \end{equation}
+    \item \textbf{Localization/Coverage Loss ($\mathcal{L}_{loc}$):} A distance metric (e.g., Kullback-Leibler divergence or Wasserstein distance) measuring the geometric divergence between the predicted Gaussian spatial parameters $\theta_k$ and the matched ground-truth distribution.
+    \item \textbf{Variational Temporal Prior ($\mathcal{L}_{KL}$):} A regularization penalty enforcing temporal tracking coherence by anchoring the current frame's location to the previous frame's approximate posterior memory.
+    \begin{equation}
+        \mathcal{L}_{KL} = D_{KL}( q^{(t)}(\theta) \parallel q^{(t-1)}(\theta) )
+    \end{equation}
+\end{itemize}
+
+\section{Conclusion}
+By treating sound sources as parametric distributions and utilizing pre-trained deep visual features for implicit spatial pooling, this architecture theoretically bypasses the mathematical aliasing of traditional numerical UpLAM solvers. Maintaining $K$ active queries natively resolves overlapping multi-source classification and stabilizes tracking during temporal silence. 
+
+\textit{(Note: This document outlines the proposed baseline architecture and analytical methodology. Specific neural network blocks, feature dimensions, and solver steps are subject to modification and optimization during active development and empirical testing.)}
+
+\section*{Acknowledgments}
+
+%Bibliography
+\bibliographystyle{unsrt}  
+\bibliography{references}  
+
+
+\end{document}
