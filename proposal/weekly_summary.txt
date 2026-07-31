@@ -1,0 +1,7 @@
+Weekly Progress Summary
+
+This week we completed the full implementation of the parametric audio-visual SELD architecture. The model tracks a latent space of K continuous 2D Gaussians, each parameterized by spatial centroid, covariance, and activity certainty. Feature extraction encoders (visual and acoustic) are implemented as swappable modules---the architecture was designed so that specific encoder backbones can be changed without modifying the rest of the pipeline. Implicit differentiable feature pooling is implemented via analytical integration of feature fields weighted by the Gaussian densities, and the classification head maps the pooled vectors to class predictions.
+
+We also expanded the theoretical analysis, working out the correct gradient propagation through the full model: from the classification loss back through the analytical pooling operation, the Bayesian recursive filter (prior marginalization and Bayes update), and the active inference gradient-ascent loop over the ELBO. All equations were verified for differentiability end-to-end.
+
+Next week: training the neural networks.

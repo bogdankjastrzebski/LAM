@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.6.5)  22 JUL 2026 23:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.6.5)  31 JUL 2026 12:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -996,7 +996,7 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 (Font)              scaled to size 5.0pt on input line 123.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 136.
+(Font)              scaled to size 10.0pt on input line 134.
  [2{/usr/share/texmf-dist/fonts/enc/dvips/libertinust1math/libusEX.enc}] (./templatePRIME.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
@@ -1012,13 +1012,13 @@ Package rerunfilecheck Info: File `templatePRIME.out' has not changed.
 Here is how much of TeX's memory you used:
  26639 strings out of 469480
  488336 string characters out of 5470004
- 882147 words of memory out of 5000000
+ 882248 words of memory out of 5000000
  54617 multiletter control sequences out of 15000+600000
  744203 words of font info for 237 fonts, out of 8000000 for 9000
  34 hyphenation exceptions out of 8191
- 99i,12n,108p,1010b,605s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 99i,11n,108p,1010b,493s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/libertinust1math/LibertinusT1Math.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineMT.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTBI.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb></usr/share/texmf-dist/fonts/type1/public/stix/stix-mathcal.pfb>
-Output written on templatePRIME.pdf (3 pages, 530905 bytes).
+Output written on templatePRIME.pdf (3 pages, 532435 bytes).
 PDF statistics:
  140 PDF objects out of 1000 (max. 8388607)
  112 compressed objects within 2 object streams
