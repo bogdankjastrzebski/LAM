@@ -14,6 +14,7 @@
 \usepackage{nicefrac}
 \usepackage{microtype}
 \usepackage{graphicx}
+\usepackage{cancel}
 \graphicspath{{media/}}
 \usepackage{libertine}
 \usepackage{libertinust1math}
@@ -153,23 +154,23 @@ We implemented the spatial fitting module in Julia using the 4-channel Eigenmike
 The full model is implemented as a PyTorch module (\texttt{pytorch\_seld/}). The pipeline consists of: (1)~YOLO feature extraction (placeholder CNN backbone, 256 output channels), (2)~spatial fitting via Adam (300 cold / 5 warm iterations), (3)~implicit feature pooling over a $128 \times 256$ angular grid, (4)~classification head (MLP, 14 output classes). Training follows the envelope theorem protocol of Section~\ref{sec:envelope}: spatial parameters are detached after fitting, and classification gradients propagate only through the feature pooling and classifier stages into the YOLO backbone.
 
 \subsection{Comparison Against ADMM}
-Table~\ref{tab:comparison} summarizes the timing comparison. At \textbf{16~ms per 1000 iterations}, our method can afford far more optimization steps than ADMM's 200-iteration budget, while warm-start tracking eliminates the per-frame cold-start cost entirely.
+Table~\ref{tab:comparison} compares per-iteration cost and frame-level performance. Our method's 14~$\mu$s/iter is 12$\times$ cheaper than ADMM's 173~$\mu$s/iter. At 100 iterations, our method takes 1.4~ms vs.\ 17~ms for ADMM. The iteration count difference (300 cold vs.\ 200) reflects the narrower gradient basins of the parametric formulation, but warm-start eliminates this gap entirely for temporal sequences.
 
 \begin{table}[ht]
 \centering
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-Method & Cold start & Warm start & Artifact-free? \\
+Method & Per iter & 100 iters & Cold start & Warm start \\
 \midrule
-ADMM (dense grid, 484 params) & 35 ms & 35 ms (no warm-start) & No \\
-Our method (32 params) & 4.2 ms (300 iters) & $<$0.1 ms (3 iters) & Yes \\
+ADMM (484 params) & 173~$\mu$s & 17.3 ms & 35 ms (200 iters) & N/A \\
+Our method (32 params) & \textbf{14~$\mu$s} & \textbf{1.4 ms} & 4.2 ms (300 iters) & $<$0.1 ms (3 iters) \\
 \bottomrule
 \end{tabular}
-\caption{Per-frame timing. ADMM cannot warm-start: reusing the previous solution accelerates convergence toward the exact---and artifact-ridden---minimizer. Our parametric model has no such limitation.}
+\caption{Per-iteration and frame-level timing. ADMM cannot warm-start because its early-stopping heuristic ignores the previous solution; reusing it accelerates convergence toward the artifact-ridden exact minimizer.}
 \label{tab:comparison}
 \end{table}
 
-For a 100-frame sequence: our method requires $4.2 + 99 \times 0.1 = 14.1$~ms, compared to ADMM's $3,500$~ms---a \textbf{248$\times$ end-to-end speedup}.
+For a 100-frame sequence: $4.2 + 99 \times 0.1 = 14.1$~ms for our method vs.\ $100 \times 35 = 3,500$~ms for ADMM---a \textbf{248$\times$ end-to-end speedup}.
 
 
 \appendix

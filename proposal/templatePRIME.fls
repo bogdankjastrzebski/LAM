@@ -120,6 +120,8 @@ INPUT /usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 INPUT /usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
 INPUT /usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
 INPUT /usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
+INPUT /usr/share/texmf-dist/tex/latex/cancel/cancel.sty
+INPUT /usr/share/texmf-dist/tex/latex/cancel/cancel.sty
 INPUT /usr/share/texmf-dist/tex/latex/libertine/libertine.sty
 INPUT /usr/share/texmf-dist/tex/latex/libertine/libertine.sty
 INPUT /usr/share/texmf-dist/tex/generic/iftex/ifxetex.sty
@@ -472,4 +474,5 @@ INPUT /usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTBI.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb
+INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/latxfont/line10.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/stix/stix-mathcal.pfb

@@ -16,8 +16,8 @@
 \newlabel{fig:direct_fit}{{1}{3}{Spatial fitting result: ground truth (left) vs.\ fitted Gaussians (right) on synthetic 2-source data. NMSE = 0.40. The two true sources are recovered; residual Gaussians at opposite azimuth correspond to front-back ambiguous copies inherent to the 4-microphone planar array}{figure.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Architecture and Training}{4}{subsection.5.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Comparison Against ADMM}{4}{subsection.5.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Per-frame timing. ADMM cannot warm-start: reusing the previous solution accelerates convergence toward the exact---and artifact-ridden---minimizer. Our parametric model has no such limitation.}}{4}{table.1}\protected@file@percent }
-\newlabel{tab:comparison}{{1}{4}{Per-frame timing. ADMM cannot warm-start: reusing the previous solution accelerates convergence toward the exact---and artifact-ridden---minimizer. Our parametric model has no such limitation}{table.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Per-iteration and frame-level timing. ADMM cannot warm-start because its early-stopping heuristic ignores the previous solution; reusing it accelerates convergence toward the artifact-ridden exact minimizer.}}{4}{table.1}\protected@file@percent }
+\newlabel{tab:comparison}{{1}{4}{Per-iteration and frame-level timing. ADMM cannot warm-start because its early-stopping heuristic ignores the previous solution; reusing it accelerates convergence toward the artifact-ridden exact minimizer}{table.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {A}Grid-Based Variant (SuperLam Pipeline)}{4}{appendix.A}\protected@file@percent }
 \newlabel{sec:grid}{{A}{4}{Grid-Based Variant (SuperLam Pipeline)}{appendix.A}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Grid-based variant: azimuthal intensity profiles (left) and spherical Miller-projection maps (center: ground truth, right: Gaussian reconstruction).}}{4}{figure.2}\protected@file@percent }

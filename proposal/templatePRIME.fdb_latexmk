@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex templatePRIME"] 1785718419.91175 "templatePRIME.aux" "templatePRIME.bbl" "templatePRIME" 1785720418.49301 0
+["bibtex templatePRIME"] 1785753847.26606 "templatePRIME.aux" "templatePRIME.bbl" "templatePRIME" 1785754893.49585 0
   "./references.bib" 1769540066 917 dfc437031a233691152b0896409e2867 ""
   "/usr/share/texmf-dist/bibtex/bst/base/unsrt.bst" 1775415801 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "templatePRIME.aux" 1785720418.01381 5577 03e984b8c82f007372f93f75e29ac99c "pdflatex"
+  "templatePRIME.aux" 1785754893.02487 5607 201769a33fbf44ed8a66309af40c468e "pdflatex"
   (generated)
   "templatePRIME.bbl"
   "templatePRIME.blg"
   (rewritten before read)
-["pdflatex"] 1785720414.15575 "templatePRIME.tex" "templatePRIME.pdf" "templatePRIME" 1785720418.4933 2
+["pdflatex"] 1785754889.18513 "templatePRIME.tex" "templatePRIME.pdf" "templatePRIME" 1785754893.49608 0
   "/usr/share/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc" 1775415801 2933 9ad527ce78d7c5fa0a642dead095f172 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc" 1775415801 2934 a4a9158faed2e9e89c771b4e3b7fc12f ""
   "/usr/share/texmf-dist/fonts/enc/dvips/libertine/lbtn_dhi6qf.enc" 1775415801 2914 3d1e3c4123f03ab27df5767d5039d109 ""
@@ -51,6 +51,7 @@
   "/usr/share/texmf-dist/fonts/tfm/public/libertinust1math/libertinust1-mathrm.tfm" 1775415801 2444 fb02663adb6cf7878fad884f56268e55 ""
   "/usr/share/texmf-dist/fonts/tfm/public/libertinust1math/libertinust1-mathsym.tfm" 1775415801 1692 b5d11793dd62c82fa77d0c2a6db921f0 ""
   "/usr/share/texmf-dist/fonts/tfm/public/stix/stix-mathcal.tfm" 1775415801 2220 4be0194a42d141b33fa339861ecefc51 ""
+  "/usr/share/texmf-dist/fonts/type1/public/amsfonts/latxfont/line10.pfb" 1775415801 11493 4f5ed183a47d3197cf8cd322325db6de ""
   "/usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineMT.pfb" 1775415801 185922 616ed06d0303f761c291b6539d9a7ada ""
   "/usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb" 1775415801 614791 ea39341e4db76f25cb20c361802d3cd5 ""
   "/usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb" 1775415801 538965 19c5c8b7f952ac97afb8565e9c21a82d ""
@@ -153,6 +154,7 @@
   "/usr/share/texmf-dist/tex/latex/base/size10.clo" 1775415801 8448 686612a86f0e04f41ea577f5ec7e83d8 ""
   "/usr/share/texmf-dist/tex/latex/base/textcomp.sty" 1775415801 2846 e26604d3d895e65d874c07f30c291f3f ""
   "/usr/share/texmf-dist/tex/latex/booktabs/booktabs.sty" 1775415801 6078 f1cb470c9199e7110a27851508ed7a5c ""
+  "/usr/share/texmf-dist/tex/latex/cancel/cancel.sty" 1775415801 7592 dd751af313a16a0308545d5bfd7aaaa2 ""
   "/usr/share/texmf-dist/tex/latex/doublestroke/dsfont.sty" 1775415801 230 7bc61880b468bfd38aedc173be7c3486 ""
   "/usr/share/texmf-dist/tex/latex/enumitem/enumitem.sty" 1775415801 52272 63d293bc0d496619edb57585740861a2 ""
   "/usr/share/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1775415801 13886 d1306dcf79a944f6988e688c1785f9ce ""
@@ -223,10 +225,10 @@
   "media/gauss_vs_truth.png" 1785717064.89644 328173 e02a1504ac9201ec0e00ca6fc7149057 ""
   "media/optimizer_convergence.png" 1785712523.64938 196068 320ad5c3b57ae3d1a27c12f630eeef5b ""
   "media/wishart_viz.png" 1785718035.23192 320107 11a078cc721aaf6d88b81c8ef1e734df ""
-  "templatePRIME.aux" 1785720418.01381 5577 03e984b8c82f007372f93f75e29ac99c "pdflatex"
-  "templatePRIME.bbl" 1785718420.06187 49 0eba253fc001332e731e8aba3f23127b "bibtex templatePRIME"
-  "templatePRIME.out" 1785720418.01681 2988 53734484c4d54bdc99e1ef9f417c8bb4 "pdflatex"
-  "templatePRIME.tex" 1785720413.7578 17134 53fb1e6936aca3eb36e906235e06af60 ""
+  "templatePRIME.aux" 1785754893.02487 5607 201769a33fbf44ed8a66309af40c468e "pdflatex"
+  "templatePRIME.bbl" 1785753847.4124 49 0eba253fc001332e731e8aba3f23127b "bibtex templatePRIME"
+  "templatePRIME.out" 1785754893.02687 2988 53734484c4d54bdc99e1ef9f417c8bb4 "pdflatex"
+  "templatePRIME.tex" 1785754887.3369 17368 5a96751be938f3a6fd0dde358d152519 ""
   (generated)
   "templatePRIME.aux"
   "templatePRIME.log"
