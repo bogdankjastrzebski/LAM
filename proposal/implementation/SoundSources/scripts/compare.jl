@@ -40,16 +40,16 @@ for i in 1:N
     c_vec[i] = real(A[:, i]' * C_noisy * A[:, i])
 end
 
-println("Running ADMM...")
+println("admm:")
 @time x_admm = solve_admm(A, C_noisy; max_iters=200, λ_1=0.1, λ_tv=0.5, ρ=1.0, cg_tol_factor=0.5)
 
-println("\nRunning Gaussian fitting (K=8)...")
+println("gaussians:")
 @time x_gauss, θ_gauss = solve_gaussians(A, C_noisy; K=8, max_iters=3000, lr=5e-3)
 
-println("\n=== Results ===")
-println("ADMM objective:      $(round(objective_value(x_admm, H, c_vec), digits=2))")
-println("Gaussian objective:  $(round(objective_value(x_gauss, H, c_vec), digits=2))")
-println("True source objective: $(round(objective_value(x_true, H, c_vec), digits=2))")
+println()
+println("admm loss:     $(round(objective_value(x_admm, H, c_vec), digits=2))")
+println("gauss loss:    $(round(objective_value(x_gauss, H, c_vec), digits=2))")
+println("true loss:     $(round(objective_value(x_true, H, c_vec), digits=2))")
 
 az = R_ang[1, :]
 p1 = plot(az, x_true, title="True Sources", xlabel="azimuth", ylabel="intensity", legend=false)
@@ -58,9 +58,8 @@ p3 = plot(az, x_gauss, title="Gaussians K=8 (32 vars)", xlabel="azimuth", legend
 
 plot(p1, p2, p3, layout=(3, 1), size=(800, 600))
 savefig("comparison_output.png")
-println("\nSaved comparison_output.png")
+println("saved comparison_output.png")
 
-println("\nFitted Gaussians:")
 for (k, g) in enumerate(θ_gauss)
-    println("  k=$k: μ=($(round(g.μ[1], digits=2)), $(round(g.μ[2], digits=2)))  σ=$(round(g.σ, digits=3))  π=$(round(g.π, digits=3))")
+    println("  k=$k: az=$(round(g.μ[1], digits=2)) el=$(round(g.μ[2], digits=2))  σ=$(round(g.σ, digits=3))  π=$(round(g.π, digits=3))")
 end

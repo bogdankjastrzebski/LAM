@@ -56,14 +56,13 @@ class SteeringVector(nn.Module):
     """
     def __init__(self):
         super().__init__()
-        # Mic positions in meters (same as Julia implementation)
         self.register_buffer("mic_positions", torch.tensor([
             [ 0.022257,  0.0,  0.035618],
             [ 0.022257,  0.0, -0.035618],
             [-0.022257,  0.0, -0.035618],
             [-0.022257,  0.0,  0.035618],
         ], dtype=torch.float32))
-        self.wavelength = 343.0 / 4833.0  # speed of sound / frequency
+        self.wavelength = 343.0 / 4833.0
 
     def forward(self, az: torch.Tensor, el: torch.Tensor):
         """
@@ -71,20 +70,17 @@ class SteeringVector(nn.Module):
         Returns: (K, 4) complex steering vectors as (K, 4, 2) real tensors
         """
         K = az.shape[0]
-        # Unit direction vectors
         sx = torch.cos(el) * torch.cos(az)
         sy = torch.cos(el) * torch.sin(az)
         sz = torch.sin(el)
-        s = torch.stack([sx, sy, sz], dim=-1)  # (K, 3)
+        s = torch.stack([sx, sy, sz], dim=-1)
 
-        # Phase shift at each mic: k * dot(r_m, s)
         k = 2 * np.pi / self.wavelength
-        phases = k * (self.mic_positions @ s.T).T  # (K, 4)
+        phases = k * (self.mic_positions @ s.T).T
 
-        # Steering vector: exp(-i * phase)
         a_real = torch.cos(phases)
         a_imag = -torch.sin(phases)
-        return torch.stack([a_real, a_imag], dim=-1)  # (K, 4, 2)
+        return torch.stack([a_real, a_imag], dim=-1)
 
 
 class CovarianceFromGaussians(nn.Module):
@@ -103,17 +99,15 @@ class CovarianceFromGaussians(nn.Module):
         pi: (K,) mixing coefficients (non-negative)
         Returns: (2, 4, 4) covariance [real, imag]
         """
-        a = self.steering(mu_az, mu_el)  # (K, 4, 2)
+        a = self.steering(mu_az, mu_el)
         K = a.shape[0]
 
-        # Build (K, 4, 4) outer products a_k · a_k^H
-        # For each k: C_k[i,j] = a_k[i] * conj(a_k[j])
-        a_cplx = a[..., 0] + 1j * a[..., 1]  # (K, 4)
-        C = torch.einsum('ki,kj->kij', a_cplx, a_cplx.conj())  # (K, 4, 4)
-        C_weighted = C * pi.view(K, 1, 1)  # (K, 4, 4)
-        C_total = C_weighted.sum(dim=0)  # (4, 4)
+        a_cplx = a[..., 0] + 1j * a[..., 1]
+        C = torch.einsum('ki,kj->kij', a_cplx, a_cplx.conj())
+        C_weighted = C * pi.view(K, 1, 1)
+        C_total = C_weighted.sum(dim=0)
 
-        return torch.stack([C_total.real, C_total.imag], dim=0)  # (2, 4, 4)
+        return torch.stack([C_total.real, C_total.imag], dim=0)
 
 
 class GaussianFittingLoss(nn.Module):
@@ -152,18 +146,15 @@ class FeaturePooling(nn.Module):
         C, H, W = feature_grid.shape
         K = mu_az.shape[0]
 
-        # Angular distance with azimuth wraparound
         daz = (az_coords.unsqueeze(0) - mu_az.view(K, 1, 1))
         daz = torch.min(torch.abs(daz), 2 * np.pi - torch.abs(daz))
         del_ = el_coords.unsqueeze(0) - mu_el.view(K, 1, 1)
-        dist2 = daz ** 2 + del_ ** 2  # (K, H, W)
+        dist2 = daz ** 2 + del_ ** 2
 
-        # Gaussian weights
-        weights = torch.exp(-dist2 / (2 * sigma.view(K, 1, 1) ** 2))  # (K, H, W)
-        weights = weights / (weights.sum(dim=(1,2), keepdim=True) + 1e-8)  # normalize
+        weights = torch.exp(-dist2 / (2 * sigma.view(K, 1, 1) ** 2))
+        weights = weights / (weights.sum(dim=(1,2), keepdim=True) + 1e-8)
 
-        # Pool features: z_{k,c} = Σ_{x,y} H_v[c,x,y] * weight[k,x,y]
-        pooled = torch.einsum('chw,khw->kc', feature_grid, weights)  # (K, C)
+        pooled = torch.einsum('chw,khw->kc', feature_grid, weights)
         return pooled
 
 
@@ -174,44 +165,29 @@ class YOLOToFeatureField(nn.Module):
     """
     def __init__(self, backbone: str = "yolov8n"):
         super().__init__()
-        # Placeholder: load YOLOv8-nano backbone
-        # In practice: use ultralytics or torch hub
         self.backbone_name = backbone
-        self.feature_channels = 256  # typical YOLO intermediate channels
+        self.feature_channels = 256
 
     def forward(self, x):
         """
         x: (B, 3, H_in, W_in) input 360-degree frames
         Returns: (B, C_v, H, W) feature field
         """
-        # TODO: Integrate actual YOLO backbone
         raise NotImplementedError("YOLO backbone not yet integrated")
 
 
 if __name__ == "__main__":
-    print("=== Gradient Flow Test ===")
-    print("Testing that Gaussian parameters can receive gradients...")
-
     K = 8
     mu_az = torch.randn(K, requires_grad=True)
     mu_el = torch.randn(K, requires_grad=True)
     pi = torch.randn(K, requires_grad=True)
-
-    C_obs = torch.randn(2, 4, 4)  # (real, imag) × 4×4
+    C_obs = torch.randn(2, 4, 4)
 
     loss_fn = GaussianFittingLoss()
     loss = loss_fn(mu_az, mu_el, pi, C_obs)
     loss.backward()
 
-    print(f"  Loss: {loss.item():.4f}")
-    print(f"  dL/d(mu_az)[0]: {mu_az.grad[0].item():.6f}")
-    print(f"  dL/d(pi)[0]:    {pi.grad[0].item():.6f}")
-    print("  Gradients flow correctly ✓")
-
-    print("\n=== Envelope Theorem Training Plan ===")
-    print("1. YOLO backbone → feature field H_v (C_v × H × W)")
-    print("2. Julia SoundSources.jl ← C_obs (4ch audio) → μ_k, π_k")
-    print("3. Feature pooling ∫ H_v · N(μ, Σ) → z_k (K × C_v)")
-    print("4. Classification head → ŷ_k")
-    print("5. Backprop: ∂L_cls/∂(YOLO) through step 3 only")
-    print("              (envelope theorem: gradient does NOT flow through step 2)")
+    print("gradient flow test")
+    print(f"  loss={loss.item():.3f}")
+    print(f"  dL/d(az)[0]={mu_az.grad[0].item():.4f}  dL/d(pi)[0]={pi.grad[0].item():.4f}")
+    print("ok")

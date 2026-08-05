@@ -1,23 +1,10 @@
-"""
-Warm-start optimization: reuse previous-frame parameters.
-
-Cold start: 300 iters (4.2 ms in Julia, ~10 ms in PyTorch)
-Warm start: 3-5 iters (<100 μs in Julia, ~200 μs in PyTorch)
-
-The temporal prior from the Bayesian filter is implemented simply:
-parameters from frame t-1 are used as initialization for frame t.
-"""
-
 import torch
 import torch.nn.functional as F
 from .gaussians import adam_fit
 
 
 class TemporalTracker:
-    """Manages Gaussian parameters across frames with warm-start."""
-
-    def __init__(self, K: int = 32, cold_iters: int = 300, warm_iters: int = 5,
-                 lr_cold: float = 1e-2, lr_warm: float = 1e-3):
+    def __init__(self, K=32, cold_iters=300, warm_iters=5, lr_cold=1e-2, lr_warm=1e-3):
         self.K = K
         self.cold_iters = cold_iters
         self.warm_iters = warm_iters
@@ -29,11 +16,6 @@ class TemporalTracker:
         self.log_pi = None
 
     def fit_frame(self, C_obs):
-        """Fit Gaussians to one frame of microphone data.
-
-        Args: C_obs: (1, 2, 4, 4) observed covariance
-        Returns: (mu_az, mu_el, pi) detached
-        """
         if self.is_first_frame:
             self.mu_az = 2 * torch.pi * torch.rand(1, self.K, requires_grad=True)
             self.mu_el = (torch.rand(1, self.K) - 0.5) * torch.pi
@@ -50,6 +32,5 @@ class TemporalTracker:
         self.mu_az, self.mu_el, pi = adam_fit(
             self.mu_az, self.mu_el, self.log_pi, C_obs, max_iters=iters, lr=lr
         )
-        # Store log_pi for next frame
         self.log_pi = (pi + 1e-8).log().detach()
         return self.mu_az, self.mu_el, pi
