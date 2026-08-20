@@ -1,0 +1,23 @@
+{
+  "N_px": 484,
+  "N_mics_em32": 32,
+  "N_mics_mic": 4,
+  "wavelength_m": 0.07044827586206898,
+  "steering_freq_hz": 4833.333333333333,
+  "neighbor_k": 6,
+  "grid": "Fibonacci N=10, upper hemisphere mask",
+  "mic_subsample_indices": [
+    5,
+    9,
+    25,
+    21
+  ],
+  "files": {
+    "R.npy": "(3, 484) float64 - spherical grid points",
+    "neighbors.npy": "(484, 6) int64 - k-NN indices for graph TV",
+    "A_em32.npy": "(32, 484) complex128 - steering matrix",
+    "A_mic.npy": "(4, 484) complex128 - 4-ch steering matrix",
+    "H_em32.npy": "(484, 484) float64 - |A'A|^2 Hessian",
+    "H_mic.npy": "(484, 484) float64 - |A'A|^2 Hessian (4-ch)"
+  }
+}
