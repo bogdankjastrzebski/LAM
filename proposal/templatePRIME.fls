@@ -462,6 +462,8 @@ INPUT ./media/wishart_viz.png
 INPUT ./media/wishart_viz.png
 INPUT ./media/wishart_viz.png
 INPUT ./media/wishart_viz.png
+INPUT /usr/share/texmf-dist/fonts/tfm/public/libertine/LinLibertineMT-tlf-t1.tfm
+INPUT /usr/share/texmf-dist/fonts/tfm/public/libertine/LinLibertineMT-tlf-t1.tfm
 INPUT ./templatePRIME.bbl
 INPUT ./templatePRIME.bbl
 INPUT templatePRIME.bbl

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.6.5)  3 AUG 2026 13:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.6.5)  6 AUG 2026 11:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -990,23 +990,23 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/n' will be
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
 (Font)              scaled to size 10.0pt on input line 118.
  [2{/usr/share/texmf-dist/fonts/enc/dvips/libertinust1math/libusBMR.enc}{/usr/share/texmf-dist/fonts/enc/dvips/libertinust1math/libusBB.enc}{/usr/share/texmf-dist/fonts/enc/dvips/libertinust1math/libusEX.enc}]
-<media/direct_fit_viz.png, id=92, 867.24pt x 361.35pt>
+<media/direct_fit_viz.png, id=96, 867.24pt x 361.35pt>
 File: media/direct_fit_viz.png Graphic file (type png)
 <use media/direct_fit_viz.png>
 Package pdftex.def Info: media/direct_fit_viz.png  used on input line 148.
 (pdftex.def)             Requested size: 469.75499pt x 195.7326pt.
  [3 <./media/direct_fit_viz.png>]
-<media/gauss_vs_truth.png, id=109, 1156.32pt x 325.215pt>
+<media/gauss_vs_truth.png, id=113, 1156.32pt x 325.215pt>
 File: media/gauss_vs_truth.png Graphic file (type png)
 <use media/gauss_vs_truth.png>
 Package pdftex.def Info: media/gauss_vs_truth.png  used on input line 185.
 (pdftex.def)             Requested size: 469.75499pt x 132.11826pt.
-<media/optimizer_convergence.png, id=110, 2258.4375pt x 1355.0625pt>
+<media/optimizer_convergence.png, id=114, 2258.4375pt x 1355.0625pt>
 File: media/optimizer_convergence.png Graphic file (type png)
 <use media/optimizer_convergence.png>
 Package pdftex.def Info: media/optimizer_convergence.png  used on input line 192.
 (pdftex.def)             Requested size: 399.2946pt x 239.57932pt.
-<media/direct_opt_compare.png, id=112, 2107.875pt x 1204.5pt>
+<media/direct_opt_compare.png, id=116, 2107.875pt x 1204.5pt>
 File: media/direct_opt_compare.png Graphic file (type png)
 <use media/direct_opt_compare.png>
 Package pdftex.def Info: media/direct_opt_compare.png  used on input line 201.
@@ -1015,7 +1015,7 @@ Package pdftex.def Info: media/direct_opt_compare.png  used on input line 201.
 Underfull \vbox (badness 3471) has occurred while \output is active []
 
  [4 <./media/gauss_vs_truth.png>]
-<media/wishart_viz.png, id=123, 867.24pt x 361.35pt>
+<media/wishart_viz.png, id=127, 867.24pt x 361.35pt>
 File: media/wishart_viz.png Graphic file (type png)
 <use media/wishart_viz.png>
 Package pdftex.def Info: media/wishart_viz.png  used on input line 220.
@@ -1023,31 +1023,49 @@ Package pdftex.def Info: media/wishart_viz.png  used on input line 220.
 
 Underfull \vbox (badness 3919) has occurred while \output is active []
 
- [5 <./media/optimizer_convergence.png> <./media/direct_opt_compare.png>] (./templatePRIME.bbl
+ [5 <./media/optimizer_convergence.png> <./media/direct_opt_compare.png>]
+Overfull \hbox (73.99446pt too wide) detected at line 263
+[]
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6 <./media/wishart_viz.png>]
+Overfull \hbox (78.42152pt too wide) detected at line 271
+[]
+ []
+
+
+Overfull \hbox (117.7514pt too wide) detected at line 283
+[]
+ []
+
+(./templatePRIME.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
-) [6 <./media/wishart_viz.png>] (./templatePRIME.aux)
+) [7] [8] (./templatePRIME.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `templatePRIME.out' has not changed.
-(rerunfilecheck)             Checksum: 53734484C4D54BDC99E1EF9F417C8BB4;2988.
+(rerunfilecheck)             Checksum: 28E000B3D12EB9909848BC5A90E75EB5;3161.
  ) 
 Here is how much of TeX's memory you used:
- 26736 strings out of 469480
- 490086 string characters out of 5470004
- 886627 words of memory out of 5000000
- 54684 multiletter control sequences out of 15000+600000
- 745496 words of font info for 246 fonts, out of 8000000 for 9000
+ 26760 strings out of 469480
+ 490575 string characters out of 5470004
+ 893676 words of memory out of 5000000
+ 54697 multiletter control sequences out of 15000+600000
+ 746124 words of font info for 248 fonts, out of 8000000 for 9000
  34 hyphenation exceptions out of 8191
- 99i,12n,108p,1380b,522s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 99i,13n,108p,1380b,522s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/libertinust1math/LibertinusT1Math.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineMT.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTBI.pfb></usr/share/texmf-dist/fonts/type1/public/libertine/LinLibertineTI.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/latxfont/line10.pfb></usr/share/texmf-dist/fonts/type1/public/stix/stix-mathcal.pfb>
-Output written on templatePRIME.pdf (6 pages, 1549871 bytes).
+Output written on templatePRIME.pdf (8 pages, 1561676 bytes).
 PDF statistics:
- 213 PDF objects out of 1000 (max. 8388607)
- 170 compressed objects within 2 object streams
- 41 named destinations out of 1000 (max. 500000)
- 51862 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 237 PDF objects out of 1000 (max. 8388607)
+ 192 compressed objects within 2 object streams
+ 52 named destinations out of 1000 (max. 500000)
+ 52894 words of extra memory for PDF output out of 61914 (max. 10000000)
 

@@ -229,6 +229,86 @@ with analytical gradients via matrix derivatives. Empirically, the Wishart loss 
 For the nonlinear least squares problem $\mathcal{L}_{\text{spatial}}$, we attempted a Gauss-Newton solver with Levenberg-Marquardt damping. The Jacobian $J \in \mathbb{R}^{32 \times 32}$ was validated analytically (error 0.0 against finite differences). However, the update $\Delta v = -(J^\top J + \lambda I)^{-1} J^\top r(v)$ consistently rejected all steps: the exponential nonlinearity in the steering vector $\mathbf{a}(\mu) = \exp(-i k \mathbf{r}\cdot\mathbf{s}(\mu))$ causes the linearized model to overshoot by $>2$~radians per step, even with heavy damping ($\lambda \rightarrow \infty$). At large $\lambda$, the method reduces to slow gradient descent, defeating its purpose. The 4-mic array spans approximately one full wavelength (85~mm at $\lambda \approx 70$~mm), so a 2-radian step moves the source through a complete steering vector oscillation---far outside the linear regime required by Newton-type methods.
 
 
+\section{Implementation Cheatsheet}
+\label{sec:cheatsheet}
+
+All equations needed to implement the method from scratch. Variables are defined once; subsequent equations refer back.
+
+\subsection*{Microphone Geometry}
+\begin{align*}
+\mathbf{r}_i &\;-\; \text{mic position (m)} &
+\texttt{MIC\_POSITIONS},\; i = 1\dots4 \\
+\lambda &\;-\; \text{wavelength} &
+\texttt{WAVELENGTH} = c/f,\; c = 343\,\mathrm{m/s} \\
+k &\;-\; \text{wavenumber} &
+\texttt{WAVENUMBER} = 2\pi/\lambda \\
+\mathbf{s}(\mu) &\;-\; \text{unit direction} &
+\texttt{source\_direction(az, el)} \\
+&\mathbf{s} = (\cos\phi\cos\theta,\; \cos\phi\sin\theta,\; \sin\theta)
+\end{align*}
+
+\subsection*{Steering Vector and Derivatives}
+\begin{align*}
+\mathbf{a}_i(\mu) &\;-\; \text{mic $i$ response} &
+\mathbf{a}_i = e^{-i k\,(\mathbf{r}_i\cdot\mathbf{s})},\qquad
+\texttt{steering\_vector(az, el)} \\
+\frac{\partial\mathbf{a}_i}{\partial\theta} &\;-\; \text{az derivative} &
+\texttt{steering\_derivative\_az(az, el)} \\
+\frac{\partial\mathbf{a}_i}{\partial\phi} &\;-\; \text{el derivative} &
+\texttt{steering\_derivative\_el(az, el)} \\
+\partial\mathbf{s}/\partial\theta &= (-\cos\phi\sin\theta,\; \cos\phi\cos\theta,\; 0),
+\quad\texttt{dsource\_daz(az, el)} \\
+\partial\mathbf{s}/\partial\phi &= (-\sin\phi\cos\theta,\; -\sin\phi\sin\theta,\; \cos\phi),
+\quad\texttt{dsource\_del(az, el)}
+\end{align*}
+
+\subsection*{Covariance Model}
+\begin{align*}
+C_{\text{obs}} &\in \mathbb{C}^{4\times 4} \;-\; \text{observed covariance (STFT)} \\
+\pi_k &\;-\; \text{source intensity (power }\mathbb{E}[|s_k|^2]\text{)} \qquad \pi_k = e^{\log\pi_k} > 0 \\
+C_{\text{pred}}(\Theta) &\;-\; \text{predicted} &
+\texttt{covariance\_from\_gaussians(mu\_az, mu\_el, pi)}
+\end{align*}
+
+\subsection*{Spatial Fitting}
+\begin{align*}
+\Theta &= \{\,\mu_k,\;\log\pi_k\,\}_{k=1}^K \;-\; \text{parameters} \\
+\mathcal{L}_{\text{spatial}} &\;-\; \text{Frobenius loss} &
+\texttt{frobenius\_loss(C\_pred, C\_obs)} \\
+\mathcal{L}_{\text{spatial}} &= \|C_{\text{obs}} - C_{\text{pred}}(\Theta)\|_F^2 \\
+\frac{\partial\mathcal{L}}{\partial(\log\pi_k)} &= \frac{\partial\mathcal{L}}{\partial\pi_k}\cdot\pi_k
+\quad\text{(chain through exp)} \\[4pt]
+\text{Optimization: } &\texttt{adam\_fit(mu\_az, mu\_el, log\_pi, C\_obs, max\_iters, lr)} \\
+&\text{Adam, lr}=10^{-2},\; 300\text{ iters cold},\; 3\text{--}5\text{ warm}
+\end{align*}
+
+\subsection*{Probabilistic Model (Training)}
+\begin{align*}
+H_v &= f_v(X_v) \;-\; \text{YOLO feature field} &
+\texttt{YOLOFeatureExtractor} \\
+z_k &\;-\; \text{pooled features} &
+\texttt{ImplicitFeaturePooling} \\
+z_k &= \int H_v(x)\,\mathcal{N}(x\mid\mu_k,\sigma^2 I)\,dx \\[2pt]
+\hat{c}_k &\;-\; \text{class logits} &
+\texttt{ClassificationHead} \\
+\hat{c}_k &= \text{Softmax}(W z_k + b),\quad W\in\mathbb{R}^{14\times C_v}
+\end{align*}
+
+\subsection*{Envelope Theorem}
+$\Theta^* = \argmin_\Theta \mathcal{L}_{\text{spatial}}(\Theta)$. Since $\mathcal{L}_{\text{spatial}}$ depends only on $C_{\text{obs}}$ (not encoder weights $\varphi$):
+\[
+\frac{d\mathcal{L}_{\text{cls}}}{d\varphi} = \frac{\partial\mathcal{L}_{\text{cls}}}{\partial\varphi}
+\]
+Implement: run \texttt{adam\_fit}, detach $\Theta^*$, backprop through classifier $\to$ pooling $\to$ YOLO.
+
+\subsection*{Key Numbers}
+\begin{itemize}[label={--}]
+    \item $K = 8$ (32 params), classes = 14 (13 DCASE + inactive)
+    \item 14\,$\mu$s/iter (Julia), $\sim$40\,$\mu$s/iter (PyTorch)
+    \item Cold: 300 iters = 4.2\,ms (Julia). Warm: 3--5 iters $<$100\,$\mu$s.
+\end{itemize}
+
+
 \section*{Acknowledgments}
 
 %Bibliography

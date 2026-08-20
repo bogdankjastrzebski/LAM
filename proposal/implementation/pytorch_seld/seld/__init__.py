@@ -4,6 +4,7 @@ from .steering import (
     MIC_POSITIONS, WAVELENGTH,
 )
 from .gaussians import GaussianParameters, GaussianFittingLoss, adam_fit
+from .visual_driven_fitting import VisualDrivenGaussianFitting
 from .optimizer import TemporalTracker
 from .features import YOLOFeatureExtractor, ImplicitFeaturePooling
 from .classifier import ClassificationHead
