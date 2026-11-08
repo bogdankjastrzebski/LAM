@@ -31,9 +31,11 @@ def main():
         model.train()
         optimizer.zero_grad()
 
-        logits, mu_az, mu_el, pi, fit_loss = model(
+        out = model(
             dummy_image, dummy_C_obs, fit_iters=args.fit_iters_cold, fit_lr=1e-2
         )
+        logits = out["class_logits"]
+        fit_loss = out["spatial_loss"]
 
         cls_loss = cls_criterion(logits.view(-1, args.num_classes), dummy_labels.view(-1))
         total_loss = cls_loss
@@ -41,7 +43,7 @@ def main():
         optimizer.step()
 
         if epoch % 10 == 0:
-            print(f"epoch {epoch:3d}  cls_loss={cls_loss.item():.3f}  fit_loss={fit_loss.mean().item():.1f}")
+            print(f"epoch {epoch:3d}  cls_loss={cls_loss.item():.3f}  fit_loss={fit_loss.item():.3f}")
 
     print("done")
 

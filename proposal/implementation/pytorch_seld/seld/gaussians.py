@@ -23,18 +23,19 @@ class GaussianParameters(nn.Module):
 
 
 class GaussianFittingLoss(nn.Module):
-    def forward(self, mu_az, mu_el, pi, C_obs):
-        C_pred = covariance_from_gaussians(mu_az, mu_el, pi)
+    def forward(self, mu_az, mu_el, pi, C_obs, mic_positions=None, wavelength=None):
+        C_pred = covariance_from_gaussians(mu_az, mu_el, pi, mic_positions, wavelength)
         return frobenius_loss(C_pred, C_obs).mean()
 
 
-def adam_fit(mu_az, mu_el, log_pi, C_obs, max_iters=300, lr=1e-2):
+def adam_fit(mu_az, mu_el, log_pi, C_obs, max_iters=300, lr=1e-2,
+             mic_positions=None, wavelength=None):
     params = [mu_az, mu_el, log_pi]
     optimizer = torch.optim.Adam(params, lr=lr)
     for _ in range(max_iters):
         optimizer.zero_grad()
         pi = F.softplus(log_pi)
-        C_pred = covariance_from_gaussians(mu_az, mu_el, pi)
+        C_pred = covariance_from_gaussians(mu_az, mu_el, pi, mic_positions, wavelength)
         loss = frobenius_loss(C_pred, C_obs).mean()
         loss.backward()
         optimizer.step()

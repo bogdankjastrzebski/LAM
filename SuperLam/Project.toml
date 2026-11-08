@@ -1,0 +1,24 @@
+name = "SuperLam"
+uuid = "7f442d1d-eede-466d-be37-99f88e5ef32b"
+version = "0.1.0"
+authors = ["bogdankjastrzebski <bogdan.k.jastrzebski@gmail.com>"]
+
+[deps]
+HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
+OSQP = "ab2f91bb-94b4-55e3-9ba0-7f65df51de79"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+
+[compat]
+HDF5 = "0.17.3"
+JuMP = "1.30.1"
+LinearAlgebra = "1.12.0"
+NPZ = "0.4.3"
+OSQP = "0.8.1"
+Plots = "1.41.6"
+Revise = "3.14.5"
+SparseArrays = "1.12.0"

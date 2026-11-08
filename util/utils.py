@@ -469,8 +469,7 @@ def get_field(min_freq=1500, max_freq=4500,nbands=10):
     xyz = get_xyz()
     dev_xyz = np.array(xyz).T
     wl_min = constants.speed_of_sound / (freq.max() + 500)
-    sh_order = nyquist_rate(dev_xyz, wl_min) # Maximum order of complex plane waves that can be imaged by the instrument.
-    sh_order=10
+    sh_order = 10
     R = fibonacci(sh_order)
     R_mask = np.abs(R[2, :]) < np.sin(np.deg2rad(90))
     R = R[:, R_mask]  # Shrink visible view to avoid border effects.
